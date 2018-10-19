@@ -1,7 +1,6 @@
 class Node:
-	def __init__(self, value, father = None):
+	def __init__(self, value):
 		self.value = value
-		self.father = father
 		self.child = []
 
 class Tree:
@@ -11,36 +10,60 @@ class Tree:
 
 	def insert(self, value, current):
 		if(len(current.child) == self.qtdChild):
-			self.insert(value, current.child[0])
+			self.insert(value)
 		else:
-			current.child.append(Node(value, current))
+			current.child.append(Node(value))
 
 	def searchPreOrder(self,value, current):
-		print(current.value)
+		'''print(current.value)
+		print("\n")'''
 		if(current.value == value):
-			return True
+			return current
 		else:
 			for i in current.child:
-				return self.searchPreOrder(value, i) or False
+				self.searchPreOrder(value, i)
+			
+
+	def searchPostOrder(self, value, current):
+		for i in current.child:
+			self.searchPostOrder(value, i)
+
+		'''print(current.value)
+		print("\n")'''
+		if(current.value == value):
+				return current
+		else:
+			return None
 
 
 	def searchOrder(self, value, current):
-		for i in current.child:
-			return self.searchOrder(value, i) or False
-		#print(current.value)
-		if(current.value == value):
-			return True
+		if current.child:
+			for i in current.child:
+				self.searchPostOrder(value, i)
+		else:
+			if current.value == value:
+				return current
+			else:
+				return
 
-	def searchPostOrdem(self):
-		return True
-
-	#def searchPostOrder(self, value, current):
+	def remove(self, value, current):
+		tmp = self.searchPreOrder(value, current)
+		if tmp != None:
+			if len(tmp.child) > 0:
+				tmp.value = tmp.child[0].value
+				for i in tmp.child[0].child:
+					i.father = aux
+				tmp.child += tmp.child[0].child
+				tmp.child.pop(0)
 
 
 a = Tree("a",3)
 a.insert("b",(a.root))
 a.insert("c",(a.root))
 a.insert("d",(a.root))
+a.insert("k",(a.root))
+a.insert("f",(a.root))
+a.insert("p",(a.root))
 #print(a.root.child[1].value)
 
-print(a.searchOrder("a",(a.root)))
+print(a.searchPreOrder("p",(a.root)))
