@@ -40,7 +40,7 @@ class kAryTree:
 		elif tipo == 2:
 			return self.searchOrder(value, self.root)
 		elif tipo == 3:
-			self.searchPostOrder(value, self.root,aux)
+			self.searchPostOrder(value, self.root)
 			return aux
 
 
@@ -53,15 +53,15 @@ class kAryTree:
 			while(current.rSibiling != None):
 				return self.searchPreOrder(value,current.rSibiling)			
 
-	def searchPostOrder(self,value, current, aux):
+	def searchPostOrder(self,value,current):
 		if current.lChild != None:
-			self.searchOrder(value,current.lChild, aux)
+			return self.searchPostOrder(value,current.lChild)
 			while(current.rSibiling != None):
-				self.searchOrder(value,current.rSibiling, aux)
+				return self.searchPostOrder(value,current.rSibiling)
 		elif(current.value == value):
-			aux = current
+			return current
 
-	def searchOrder(self,value, current):
+	def searchOrder(self,value,current):
 		if current.lChild != None:
 				return self.searchOrder(value,current.lChild)
 		else:
@@ -70,21 +70,33 @@ class kAryTree:
 			while(current.rSibiling != None):
 				return self.searchOrder(value,current.rSibiling)
 		
+	def remove(self, value):
+		__remove(value,self.root)
 
-	def remove(self, value, current):
+	def __remove(self, value, current):
 		tmp = self.searchPreOrder(value, current)
 		if tmp != None:
-			if len(tmp.child) > 0:
-				tmp.value = tmp.child[0].value
-				for i in tmp.child[0].child:
-					i.father = aux
-				tmp.child += tmp.child[0].child
-				tmp.child.pop(0)
-
+			children = []
+			if tmp.lChild != None:
+				if tmp.lChild.rSibiling != None:
+					tmp1 = tmp.lChild.rSibiling 
+					tmp.value = tmp.lChild.value
+					tmp.lChild = tmp.lChild.lChild
+					tmp2 = tmp.lChild.rSibiling
+					while (tmp2.rSibiling != None):
+							tmp2 = tmp2.rSibiling
+					tmp2.rSibiling = tmp1
+				else:
+					tmp= tmp.lChild
+			elif tmp.rSibiling == None:
+				del tmp
+		else:
+			print("Impossivel remover")
 
 a = kAryTree("a",3)
 a.insert("b","a")
 a.insert("c","a")
 a.insert("d","a")
 a.insert("k","d")
-print(a.search("k",1) != None)
+print("Type of search: 1 - PreOrder \t 2 - Order\t 3 - PostOrder")
+print(a.search("k",int(input())) != None)
